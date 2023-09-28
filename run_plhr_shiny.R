@@ -7,19 +7,13 @@ library(shiny)
 library(shinydashboard)
 library(here)
 
-## Testing with WASH data
+## Testing with WASH data)
 
 # Excel file with the specifications in it
 data_l <- import_list("WASH_shiny.xlsx")
 
 # R file where we call and tidy the data
 source("WASH_setup.R")
-
-source("PLH_shiny.R")
-source("display_contents.R")
-source("display_sheet_setup.R")
-source("box_function.R")
-source("boxplot_table.R")
 
 # To illustrate calling multiple data frames in the shiny system ------------------
 # this is under the modules tab, where we tried a different data set to check it worked with
@@ -38,3 +32,4 @@ PLH_shiny(title = "EFM Research",
           data_frame = our_data,
           status = "primary",
           colour = "blue")
+
