@@ -7,7 +7,7 @@ library(shiny)
 library(shinydashboard)
 library(here)
 
-## Testing with WASH data
+## Testing with WASH data)
 
 # Excel file with the specifications in it
 data_l <- import_list("WASH_shiny.xlsx")
@@ -32,3 +32,4 @@ PLH_shiny(title = "EFM Research",
           data_frame = our_data,
           status = "primary",
           colour = "blue")
+
