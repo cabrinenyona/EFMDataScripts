@@ -1,35 +1,49 @@
 # Template file to run PLHR changes.
 library(rio)
 library(plhR)
-library(readxl)
-library(tidyverse)
 library(shiny)
+#library(shinythemes)
+library(shinyjs)
+library(plotly)
 library(shinydashboard)
-library(here)
+library(jsonlite)
+library(here)     
+library(ggplot2)
+library(tibble)
+library(stringr)
+library(forcats)
+library(lubridate)
+library(purrr)
+library(tidyr)
+library(dplyr)
+library(gt)
+library(readxl)
+library(postgresr)
+library(ggthemes)
+
+
+
 
 ## Testing with WASH data)
 
-# Excel file with the specifications in it
-data_l <- import_list("WASH_shiny.xlsx")
-
 # R file where we call and tidy the data
-source("WASH_setup.R")
+source("EFM_loading_data.R")
 
-# To illustrate calling multiple data frames in the shiny system ------------------
-# this is under the modules tab, where we tried a different data set to check it worked with
-# mutliple data sets :) 
-flow_checkin_data <- readRDS("flow_checkin_data.RDS")
+# Excel file with the specifications in it
+data_l <- import_list("EFM_shiny.xlsx")
 
-# This here wouldn't usually be needed, but is only here to illustrate the "main_page" options
-# usually you would do this with things in the WASH data :) 
-df <- readRDS("df.RDS")
-our_data <- our_data[1:489,]
-our_data <- bind_cols(df, our_data)
+data_l$main_page <- NULL
 
+data_l$contents <- data_l$contents[1,]
+#TODO: remove data column in spreadsheet
+data_l$activities <- NULL
+data_l$storybooks <- NULL
+data_l$download <- NULL
+data_l$demographics <- data_l$demographics[1,]
 # Run the shiny dashboard
 PLH_shiny(title = "EFM Research",
           data_list = data_l,
-          data_frame = our_data,
-          status = "primary",
-          colour = "blue")
+          data_frame = plhdata_org,
+          status = "primary"
+          )
 
