@@ -1,11 +1,38 @@
 #devtools::install_github("IDEMSInternational/postgresr")
 #devtools::install_github("IDEMSInternational/plhR")
 
+source("Personal Setup.R")
 
+# Functions ---------------------
+# function to fix up namings to make it a bit prettier!
+naming_conventions <- function(x, replace, replace_after) {
+  if (!missing(replace)){
+    x <- gsub(paste("^.*?", replace, ".*", sep = ""), "", x)
+  }
+  if (!missing(replace_after)){
+    x <- gsub(paste(replace_after, "$", sep = ""), "", x)
+  }
+  substr(x, 1, 1) <- toupper(substr(x, 1, 1))
+  x <- gsub("_", " ", x)
+  x
+}
 
+# so we can use "add_na_variable" to add into the data variables which are not in the data
+# but will be at some point
+# this function checks if the variable is in the data.
+# If it is not in the data, then it adds it as a new variable with all NAs.
+add_na_variable <- function(data = contacts_unflat, variable){
+  for (names in variable) {
+    if (!names %in% colnames(data)) {
+      data[, names] <- NA
+      warning(paste(names, "does not exist. Adding NAs"))
+    }
+  }
+  return(data)
+}
+
+# Download data ----------------------------------------------------------------
 #  download EFM app data from Metabase as an RDS file?
-source(here("Personal Setup.R"))
-
 plhdata_org <- get_user_data(filter_variable = "app_deployment_name",
                              filter_variable_value = "early_family_math",
                              site = plh_con, merge_check = FALSE, filter = TRUE)
@@ -53,6 +80,23 @@ plhdata_org_3 <- plhdata_org %>%
 
 
 
+######################################### Hello - fixes and comments #######################################
 
+# we got an error in shiny:
+# Caused by error in `.data[["rp-contact-field.efm_sb_Cat_And_Dog_And_The_Ball_book_click_history"]]`:
+#   ! Column `rp-contact-field.efm_sb_Cat_And_Dog_And_The_Ball_book_click_history` not found in `.data`.
 
+# lets check if these variables exist
+vars_to_check <- data_l$storybooks$variable
+plhdata_org <- add_na_variable(data = plhdata_org, variable = vars_to_check)
 
+# WARNING: Please please check when you do this - this code creates the variable and fills with NAs if it
+# is not in the data set.
+# However, it may be that this variable is a typo, and so therefore you need to check the typo and fix it that way.
+# Please make sure of this. I've noticed some typos already - e.g. you said
+# app_last_launch, not rp-contact-field.app_last_launch. I've fixed this on run_plhr_shiny.R
+
+#### Fix namings for rp-contact-field.current_book
+# We just want to remove "data.efm_storybooks.efm_sb_" from our names
+plhdata_org$`rp-contact-field.current_book` <- naming_conventions(plhdata_org$`rp-contact-field.current_book`,
+                                                                  "data.efm_storybooks.efm_sb_")

@@ -21,7 +21,7 @@ library(readxl)
 library(postgresr)
 library(ggthemes)
 
-setwd("~/GitHub/plhR/test")
+# setwd("~/GitHub/plhR/test")
 
 ## Testing with WASH data)
 
