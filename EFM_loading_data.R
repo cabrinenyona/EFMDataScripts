@@ -1,9 +1,8 @@
 #devtools::install_github("IDEMSInternational/postgresr")
 #devtools::install_github("IDEMSInternational/plhR")
 
-source("Personal Setup.R")
 
-# Functions ---------------------
+# Functions
 # function to fix up namings to make it a bit prettier!
 naming_conventions <- function(x, replace, replace_after) {
   if (!missing(replace)){
@@ -57,25 +56,25 @@ count_dates <- function(x) {
 # Apply the function to each element of the vector
 
 # METHOD 1: sapply
-plhdata_org1 <- plhdata_org %>%
-  mutate(count_activities_button_click_history = 
-           sapply(`rp-contact-field.activities_button_click_history`, count_dates))
-plhdata_org1 %>% dplyr::select(count_activities_button_click_history, `rp-contact-field.activities_button_click_history`) %>% View()
+# plhdata_org1 <- plhdata_org %>%
+#   mutate(count_activities_button_click_history = 
+#            sapply(`rp-contact-field.activities_button_click_history`, count_dates))
+# plhdata_org1 %>% dplyr::select(count_activities_button_click_history, `rp-contact-field.activities_button_click_history`)
 
 # METHOD 2: purrr
-plhdata_org2 <- plhdata_org %>%
-  mutate(count_activities_button_click_history_purrr = 
-           purrr::map_dbl(.x = `rp-contact-field.activities_button_click_history`,
-                          .f = ~ count_dates(.x)))
-
-plhdata_org2 %>% dplyr::select(count_activities_button_click_history, count_activities_button_click_history_purrr, rp.contact.field.activities_button_click_history) %>% View()
-
+# plhdata_org2 <- plhdata_org %>%
+#   mutate(count_activities_button_click_history_purrr = 
+#            purrr::map_dbl(.x = `rp-contact-field.activities_button_click_history`,
+#                           .f = ~ count_dates(.x)))
+# 
+# plhdata_org2 %>% dplyr::select(count_activities_button_click_history, count_activities_button_click_history_purrr, rp.contact.field.activities_button_click_history) %>% View()
+# 
 
 # METHOD 3: multiple columns
-plhdata_org_3 <- plhdata_org %>%
-  mutate(across(ends_with("_click_history"), # put in here a set of variables.
-                .names = "{.col}_count",     # rename the new variables
-                ~ sapply(.x, count_dates)))  # apply count_dates to them.
+# plhdata_org_3 <- plhdata_org %>%
+#   mutate(across(ends_with("_click_history"), # put in here a set of variables.
+#                 .names = "{.col}_count",     # rename the new variables
+#                 ~ sapply(.x, count_dates)))  # apply count_dates to them.
 #plhdata_org_3 %>% View()
 
 
@@ -100,3 +99,9 @@ plhdata_org <- add_na_variable(data = plhdata_org, variable = vars_to_check)
 # We just want to remove "data.efm_storybooks.efm_sb_" from our names
 plhdata_org$`rp-contact-field.current_book` <- naming_conventions(plhdata_org$`rp-contact-field.current_book`,
                                                                   "data.efm_storybooks.efm_sb_")
+
+
+#TODO: remove data column in spreadsheet
+plhdata_org$`rp-contact-field._server_sync_latest` <- lubridate::as_date(plhdata_org$`rp-contact-field._server_sync_latest`)
+plhdata_org$`app_last_launch` <- plhdata_org$`rp-contact-field.app_last_launch`
+plhdata_org$`app_launch_count` <- plhdata_org$`rp-contact-field.app_launch_count`

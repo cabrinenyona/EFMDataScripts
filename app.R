@@ -26,16 +26,15 @@ library(ggthemes)
 ## Testing with WASH data)
 
 # R file where we call and tidy the data
+source("Personal Setup.R")
 data_l <- import_list("EFM_shiny (1).xlsx")
 source("EFM_loading_data.R")
+
 
 # Excel file with the specifications in it
 data_l <- import_list("EFM_shiny (1).xlsx")
 data_l$contents <- data_l$contents[1:3,]
-#TODO: remove data column in spreadsheet
-plhdata_org$`rp-contact-field._server_sync_latest` <- lubridate::as_date(plhdata_org$`rp-contact-field._server_sync_latest`)
-plhdata_org$`app_last_launch` <- plhdata_org$`rp-contact-field.app_last_launch`
-plhdata_org$`app_launch_count` <- plhdata_org$`rp-contact-field.app_launch_count`
+
 
 # Run the shiny dashboard
 PLH_shiny(title = "EFM Research",
