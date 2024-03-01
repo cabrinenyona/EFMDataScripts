@@ -1,6 +1,7 @@
 #devtools::install_github("IDEMSInternational/postgresr")
 #devtools::install_github("IDEMSInternational/plhR")
 
+data_l <- import_list("EFM_shiny (1).xlsx")
 
 # Functions
 # function to fix up namings to make it a bit prettier!
@@ -32,11 +33,17 @@ add_na_variable <- function(data = contacts_unflat, variable){
 
 # Download data ----------------------------------------------------------------
 #  download EFM app data from Metabase as an RDS file?
-plhdata_org <- get_user_data(filter_variable = "app_deployment_name",
-                             filter_variable_value = "early_family_math",
-                             site = plh_con, merge_check = FALSE, filter = TRUE)
+
+plhdata_org <- postgresr::get_user_data(site = plh_con, filter = FALSE)
+
+# plhdata_org <- get_user_data(filter_variable = "app_deployment_name",
+#                              filter_variable_value = "early_family_math",
+#                              site = plh_con, merge_check = FALSE, filter = TRUE)
 #names(plhdata_org) <- gsub(x = names(plhdata_org), pattern = "\\-", replacement = ".")  
 #View(plhdata_org)
+
+mydate <- "2023-12-15"
+plhdata_org <- plhdata_org %>% filter(as.Date(createdAt) > as.Date(mydate))
 
 
 # COUNTING the number of clicks --------------------------------------------------------------------
@@ -86,6 +93,7 @@ count_dates <- function(x) {
 #   ! Column `rp-contact-field.efm_sb_Cat_And_Dog_And_The_Ball_book_click_history` not found in `.data`.
 
 # lets check if these variables exist
+
 vars_to_check <- data_l$storybooks$variable
 plhdata_org <- add_na_variable(data = plhdata_org, variable = vars_to_check)
 

@@ -7,11 +7,11 @@ library(DBI)
 
 #Connect to Database to get original data
 plh_con <- DBI::dbConnect(RPostgres::Postgres(),
-                     dbname = 'plh',
-                     host = 'apps-server.idems.international',
-                     port = 5432,
-                     user = 'parent_app',
-                     password = 'parent_app')
+                          dbname = 'early_family_math',
+                          host = 'apps-server.idems.international',
+                          port = 5432,
+                          user = 'early_family_math',
+                          password = 'nPmtPjhi2HuQDz')
 
 # TODO: explore do a query (filter)
 #DBI::dbReadTable(conn = plh_con, name = "app_users")
