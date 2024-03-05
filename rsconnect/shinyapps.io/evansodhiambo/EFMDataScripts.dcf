@@ -5,7 +5,7 @@ account: evansodhiambo
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 11297311
-bundleId: 8332188
+bundleId: 8332216
 url: https://evansodhiambo.shinyapps.io/EFMDataScripts/
 version: 1
 asMultiple: FALSE
