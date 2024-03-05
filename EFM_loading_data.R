@@ -113,3 +113,47 @@ plhdata_org$`rp-contact-field.current_book` <- naming_conventions(plhdata_org$`r
 plhdata_org$`rp-contact-field._server_sync_latest` <- lubridate::as_date(plhdata_org$`rp-contact-field._server_sync_latest`)
 plhdata_org$`app_last_launch` <- plhdata_org$`rp-contact-field.app_last_launch`
 plhdata_org$`app_launch_count` <- plhdata_org$`rp-contact-field.app_launch_count`
+
+#App last sync
+plhdata_org <- plhdata_org %>%
+  mutate(synced_7_days = ifelse(`rp-contact-field._server_sync_latest` >= as.Date(lubridate::now(tzone = "UTC")) - 7,
+                                1,0))
+
+plhdata_org <- plhdata_org %>%
+  mutate(synced_7_14_days = ifelse(`rp-contact-field._server_sync_latest` >= as.Date(lubridate::now(tzone = "UTC")) - 14 &
+                                     `rp-contact-field._server_sync_latest` < as.Date(lubridate::now(tzone = "UTC")) - 7,
+                                   1,0))
+
+plhdata_org <- plhdata_org %>%
+  mutate(synced_14_30_days = ifelse(`rp-contact-field._server_sync_latest` >= as.Date(lubridate::now(tzone = "UTC")) - 30 &
+                                     `rp-contact-field._server_sync_latest` < as.Date(lubridate::now(tzone = "UTC")) - 14,
+                                   1,0))
+
+plhdata_org <- plhdata_org %>%
+  mutate(synced_more_than_30_days = ifelse(`rp-contact-field._server_sync_latest` < as.Date(lubridate::now(tzone = "UTC")) - 30,
+                                           1,0))
+
+
+# # App last launch - line graph
+# plhdata_org$app_last_launch <- as.Date(plhdata_org$app_last_launch)
+# 
+# # Creating a data frame of the last lauched dates
+# app_last_launch_data <- plhdata_org %>%
+#   filter(!is.na(app_last_launch)) %>% 
+#   group_by(app_last_launch) %>% 
+#   summarise(frequency = n())
+
+# Creating the line graph
+# ggplot(app_last_launch_data) + 
+#   geom_line(aes(x = app_last_launch, y = frequency)) +
+#   geom_point(aes(x = app_last_launch, y = frequency)) + 
+#   labs(x = "Date", y = "Frequency", title = "Frequency of Values by Date")
+# 
+
+
+
+
+
+
+
+

@@ -30,8 +30,8 @@ source("Personal Setup.R")
 source("EFM_loading_data.R")
 
 # Excel file with the specifications in it
-#data_l <- import_list("EFM_shiny (1).xlsx")
-#data_l$contents <- data_l$contents[1:4,]
+data_l <- import_list("EFM_shiny (1).xlsx")
+data_l$contents <- data_l$contents[1:3,]
 
 # Run the shiny dashboard
 PLH_shiny(title = "EFM Research",
