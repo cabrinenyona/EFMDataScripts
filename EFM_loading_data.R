@@ -54,7 +54,7 @@ plhdata_org <- plhdata_org %>% filter(as.Date(createdAt) > as.Date(mydate))
 # Function to count dates in each element of the vector
 count_dates <- function(x) {
   if (is.na(x)) {
-    return(NA)
+    return(0)
   } else {
     dates <- unlist(strsplit(x, ";"))
     return(length(dates))
@@ -79,10 +79,10 @@ count_dates <- function(x) {
 # 
 
 # METHOD 3: multiple columns
-# plhdata_org_3 <- plhdata_org %>%
-#   mutate(across(ends_with("_click_history"), # put in here a set of variables.
-#                 .names = "{.col}_count",     # rename the new variables
-#                 ~ sapply(.x, count_dates)))  # apply count_dates to them.
+plhdata_org <- plhdata_org %>%
+  mutate(across(ends_with("_click_history"), # put in here a set of variables.
+                .names = "{.col}_count",     # rename the new variables
+                ~ sapply(.x, count_dates)))  # apply count_dates to them.
 #plhdata_org_3 %>% View()
 
 
@@ -134,6 +134,7 @@ plhdata_org <- plhdata_org %>%
   mutate(synced_more_than_30_days = ifelse(`rp-contact-field._server_sync_latest` < as.Date(lubridate::now(tzone = "UTC")) - 30,
                                            1,0))
 
+plhdata_org$app_last_launch <- as.Date(plhdata_org$app_last_launch)
 
 # # App last launch - line graph
 # plhdata_org$app_last_launch <- as.Date(plhdata_org$app_last_launch)
