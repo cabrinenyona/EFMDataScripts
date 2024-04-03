@@ -7,6 +7,7 @@ library(shinyjs)
 library(plotly)
 library(shinydashboard)
 library(jsonlite)
+library(rjson)
 library(here)     
 library(ggplot2)
 library(tibble)
@@ -28,6 +29,7 @@ library(shinyauthr)
 
 # R file where we call and tidy the data
 source("Personal Setup.R")
+source("Functions.R")
 source("EFM_loading_data.R")
 source("Credentials_data.R")
 
