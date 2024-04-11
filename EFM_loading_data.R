@@ -1,36 +1,7 @@
 #devtools::install_github("IDEMSInternational/postgresr")
 #devtools::install_github("IDEMSInternational/plhR")
 
-
-data_l <- import_list("EFM_shiny (1).xlsx")
-
-# Functions
-# function to fix up namings to make it a bit prettier!
-naming_conventions <- function(x, replace, replace_after) {
-  if (!missing(replace)){
-    x <- gsub(paste("^.*?", replace, ".*", sep = ""), "", x)
-  }
-  if (!missing(replace_after)){
-    x <- gsub(paste(replace_after, "$", sep = ""), "", x)
-  }
-  substr(x, 1, 1) <- toupper(substr(x, 1, 1))
-  x <- gsub("_", " ", x)
-  x
-}
-
-# so we can use "add_na_variable" to add into the data variables which are not in the data
-# but will be at some point
-# this function checks if the variable is in the data.
-# If it is not in the data, then it adds it as a new variable with all NAs.
-add_na_variable <- function(data = contacts_unflat, variable){
-  for (names in variable) {
-    if (!names %in% colnames(data)) {
-      data[, names] <- NA
-      warning(paste(names, "does not exist. Adding NAs"))
-    }
-  }
-  return(data)
-}
+data_l <- import_list("EFM_shiny.xlsx")
 
 # Download data ----------------------------------------------------------------
 #  download EFM app data from Metabase as an RDS file?
@@ -46,20 +17,18 @@ plhdata_org <- postgresr::get_user_data(site = plh_con, filter = FALSE)
 mydate <- "2023-12-15"
 plhdata_org <- plhdata_org %>% filter(as.Date(createdAt) > as.Date(mydate))
 
+# filter to web users?
+plhdata_org <- plhdata_org %>% dplyr::filter(nchar(app_user_id) == 16)
+
+# filter to individuals from Kenya
+token_matomo <- read.table("token_matomo", quote="\"", comment.char="")
+efm_kenya <- calling_matomo_data(type = "EFM_KE")
+kenyan_ids <- efm_kenya$UUID
+plhdata_org <- plhdata_org %>% dplyr::filter(app_user_id %in% kenyan_ids)
 
 # COUNTING the number of clicks --------------------------------------------------------------------
 ### Creating counts 
 #x <- c("2023-11-24T09:28:59 ; 2023-11-24T09:30:22", NA, "2023-11-27T14:45:52")
-
-# Function to count dates in each element of the vector
-count_dates <- function(x) {
-  if (is.na(x)) {
-    return(0)
-  } else {
-    dates <- unlist(strsplit(x, ";"))
-    return(length(dates))
-  }
-}
 
 # Apply the function to each element of the vector
 
