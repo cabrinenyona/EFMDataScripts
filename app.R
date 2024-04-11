@@ -23,18 +23,14 @@ library(postgresr)
 library(ggthemes)
 library(shinyauthr)
 
-# setwd("~/GitHub/plhR/test")
-
-## Testing with WASH data)
-
-# R file where we call and tidy the data
+# R files where we call and tidy the data
 source("Personal Setup.R")
 source("Functions.R")
 source("EFM_loading_data.R")
 source("Credentials_data.R")
 
 # Excel file with the specifications in it
-data_l <- import_list("EFM_shiny (1).xlsx")
+data_l <- import_list("EFM_shiny.xlsx")
 #data_l$contents <- data_l$contents[1:3,]
 
 # Run the shiny dashboard
