@@ -122,6 +122,7 @@ plhdata_org$app_last_launch <- as.Date(plhdata_org$app_last_launch)
 # 
 
 
+# 15/04/2024 - Evans removed "App Launch History" from demographics tab.
 
 
 
