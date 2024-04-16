@@ -25,8 +25,6 @@ token_matomo <- read.table("token_matomo", quote="\"", comment.char="")
 efm_kenya <- calling_matomo_data(type = "EFM_KE")
 kenyan_ids <- efm_kenya$UUID
 plhdata_org <- plhdata_org %>% dplyr::filter(app_user_id %in% kenyan_ids)
-plhdata_org <- full_join(plhdata_org, efm_kenya, by = c("app_user_id" = "UUID"))
-
 
 # COUNTING the number of clicks --------------------------------------------------------------------
 ### Creating counts 
@@ -84,8 +82,7 @@ plhdata_org$`rp-contact-field.current_book` <- naming_conventions(plhdata_org$`r
 #TODO: remove data column in spreadsheet
 plhdata_org$`rp-contact-field._server_sync_latest` <- lubridate::as_date(plhdata_org$`rp-contact-field._server_sync_latest`)
 plhdata_org$`app_last_launch` <- plhdata_org$`rp-contact-field.app_last_launch`
-plhdata_org $ app_last_launch_month <- as.yearmon(plhdata_org$app_last_launch)
-plhdata_org$`app_launch_count` <- as.numeric(plhdata_org$`rp-contact-field.app_launch_count`)
+plhdata_org$`app_launch_count` <- plhdata_org$`rp-contact-field.app_launch_count`
 
 #App last sync
 plhdata_org <- plhdata_org %>%
@@ -125,7 +122,6 @@ plhdata_org$app_last_launch <- as.Date(plhdata_org$app_last_launch)
 # 
 
 
-# 15/04/2024 - Evans removed "App Launch History" from demographics tab.
 
 
 

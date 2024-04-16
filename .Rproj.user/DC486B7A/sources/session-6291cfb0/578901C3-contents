@@ -22,7 +22,6 @@ library(readxl)
 library(postgresr)
 library(ggthemes)
 library(shinyauthr)
-library(zoo)
 
 # R files where we call and tidy the data
 source("Personal Setup.R")
