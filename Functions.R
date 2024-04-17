@@ -5,8 +5,8 @@ calling_matomo_data <- function(date_from = "2023-10-25", date_to = "2024-10-25"
   type <- match.arg(type)
   
   if (type == "EFM_KE"){
-    segment_name <- "segment=pageTitle%3D%3DEarly%252520Family%252520Math;countryCode%3D%3Dke"
-  } else if (type == "EFM_not_KE"){
+    segment_name <- "segment=countryCode%3D%3Dke;pageTitle%3D%3DEarly%252520Family%252520Math"
+    } else if (type == "EFM_not_KE"){
     segment_name <- "segment=pageTitle%3D%3DEarly%252520Family%252520Math;countryCode!%3Dke"
   } else {
     segment_name <- "segment="
