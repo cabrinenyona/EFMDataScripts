@@ -82,28 +82,40 @@ plhdata_org$`rp-contact-field.current_book` <- naming_conventions(plhdata_org$`r
 
 
 #TODO: remove data column in spreadsheet
+
 plhdata_org$`rp-contact-field._server_sync_latest` <- lubridate::as_date(plhdata_org$`rp-contact-field._server_sync_latest`)
+
 plhdata_org$`app_last_launch` <- plhdata_org$`rp-contact-field.app_last_launch`
 plhdata_org $ app_last_launch_month <- as.yearmon(plhdata_org$app_last_launch)
+
 plhdata_org$`app_launch_count` <- as.numeric(plhdata_org$`rp-contact-field.app_launch_count`)
+
+plhdata_org$`avg_time_on_app` <- plhdata_org$`Avg. Time on Website`
+plhdata_org$`actions_per_visit` <- plhdata_org$`Actions per visit`
+
+plhdata_org$`app_last_sync` <- plhdata_org$`rp-contact-field._server_sync_latest`
+plhdata_org $ app_last_sync_month <- as.yearmon(plhdata_org$app_last_sync)
+
+plhdata_org$`days_btwn_app_launches` <- as.numeric(plhdata_org$`rp-contact-field.max_days_between_app_launches`)
+
 
 #App last sync
 plhdata_org <- plhdata_org %>%
-  mutate(synced_7_days = ifelse(`rp-contact-field._server_sync_latest` >= as.Date(lubridate::now(tzone = "UTC")) - 7,
+  mutate(synced_7_days = ifelse(app_last_sync >= as.Date(lubridate::now(tzone = "UTC")) - 7,
                                 1,0))
 
 plhdata_org <- plhdata_org %>%
-  mutate(synced_7_14_days = ifelse(`rp-contact-field._server_sync_latest` >= as.Date(lubridate::now(tzone = "UTC")) - 14 &
-                                     `rp-contact-field._server_sync_latest` < as.Date(lubridate::now(tzone = "UTC")) - 7,
+  mutate(synced_7_14_days = ifelse(app_last_sync >= as.Date(lubridate::now(tzone = "UTC")) - 14 &
+                                     app_last_sync < as.Date(lubridate::now(tzone = "UTC")) - 7,
                                    1,0))
 
 plhdata_org <- plhdata_org %>%
-  mutate(synced_14_30_days = ifelse(`rp-contact-field._server_sync_latest` >= as.Date(lubridate::now(tzone = "UTC")) - 30 &
-                                     `rp-contact-field._server_sync_latest` < as.Date(lubridate::now(tzone = "UTC")) - 14,
+  mutate(synced_14_30_days = ifelse(app_last_sync >= as.Date(lubridate::now(tzone = "UTC")) - 30 &
+                                      app_last_sync < as.Date(lubridate::now(tzone = "UTC")) - 14,
                                    1,0))
 
 plhdata_org <- plhdata_org %>%
-  mutate(synced_more_than_30_days = ifelse(`rp-contact-field._server_sync_latest` < as.Date(lubridate::now(tzone = "UTC")) - 30,
+  mutate(synced_more_than_30_days = ifelse(app_last_sync < as.Date(lubridate::now(tzone = "UTC")) - 30,
                                            1,0))
 
 plhdata_org$app_last_launch <- as.Date(plhdata_org$app_last_launch)
@@ -125,7 +137,44 @@ plhdata_org$app_last_launch <- as.Date(plhdata_org$app_last_launch)
 # 
 
 
-# 15/04/2024 - Evans removed "App Launch History" from demographics tab.
+# ggplot(plhdata_org, aes(x = avg_time_on_app)) +
+#   geom_density(fill = "skyblue", color = "blue", alpha = 0.5) +  # Customize fill, color, and transparency
+#   labs(title = "Average time on app", x = "Time", y = "Density") +  # Add title and axis labels
+#   theme_minimal()  # Apply a minimal theme (optional)
+# 
+# 
+# geom_density(aes(x = avg_time_on_app, fill = "skyblue", color = "blue", alpha = 0.5)) + labs(x = "Time", y = "Density", title = "Average time on App") + theme(legend.position = "none") + theme_minimal()
+# 
+
+
+# geom_density(aes(x = avg_time_on_app), fill = "skyblue", color = "blue", alpha = 0.5) + labs(x = "Time", y = "Density", title = "Average time on App") + theme(legend.position = "none") + theme_minimal ()
+# 
+# geom_density(aes(x = actions_per_visit), fill = "skyblue", color = "blue", alpha = 0.5) + labs(x = "Actions", y = "Density", title = "Actions Per Visit") + theme(legend.position = "none") + theme_minimal ()
+# 
+
+# Activities
+plhdata_org$`current_activities_chapter` <- plhdata_org$'rp-contact-field.current_chapter'
+
+plhdata_org <- plhdata_org %>% mutate(current_activities_chapter = case_when(
+  current_activities_chapter == "data.efm_chapt.efm_chapt_1" ~ "Chapter 1",
+  current_activities_chapter == "data.efm_chapt.efm_chapt_2" ~ "Chapter 2",
+  current_activities_chapter == "data.efm_chapt.efm_chapt_3" ~ "Chapter 3",
+  current_activities_chapter == "data.efm_chapt.efm_chapt_4" ~ "Chapter 4",
+  current_activities_chapter == "data.efm_chapt.efm_chapt_5" ~ "Chapter 5",
+  current_activities_chapter == NA ~ "NA"))
+
+
+# Storybooks
+plhdata_org$`current_storybook_accessed` <- plhdata_org$'rp-contact-field.current_book'
+
+
+# geom_bar(aes(x = current_storybook_accessed)) + labs(x = "Storybook", y = "Count", title = "Current storybooks accessed") + theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1)) + theme_minimal ()
+# 
+
+
+
+
+
 
 
 
