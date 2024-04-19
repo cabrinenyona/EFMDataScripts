@@ -167,12 +167,16 @@ plhdata_org <- plhdata_org %>% mutate(current_activities_chapter = case_when(
 # Storybooks
 plhdata_org$`current_storybook_accessed` <- plhdata_org$'rp-contact-field.current_book'
 
+geom_bar(aes(x = current_storybook_accessed)) + 
+  labs(x = "Storybook", y = "Count", title = "Current storybooks accessed") + 
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1)) + 
+  theme_minimal ()
 
-# geom_bar(aes(x = current_storybook_accessed)) + labs(x = "Storybook", y = "Count", title = "Current storybooks accessed") + theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1)) + theme_minimal ()
-# 
-
-
-
+library(ggplotly)
+ggplotly::plotly (geom_bar(aes(x = current_storybook_accessed)) + 
+                    labs(x = "Storybook", y = "Count", title = "Current storybooks accessed") + 
+                    theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1)) + 
+                    theme_minimal ())
 
 
 
