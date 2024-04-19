@@ -1,19 +1,22 @@
 # Function to call matomo data
-calling_matomo_data <- function(date_from = "2023-10-25", date_to = "2024-10-25", data = plhdata_org,
+calling_matomo_data <- function(date_from = "2023-12-15", date_to = Sys.Date(), data = plhdata_org,
                                 type = c("none", "EFM_KE", "EFM_not_KE"),
                                 token = token_matomo){
   type <- match.arg(type)
+
+  if (as.Date(date_to) > Sys.Date()){
+    date_to <- Sys.Date()
+  }
   
   if (type == "EFM_KE"){
     segment_name <- "segment=countryCode%3D%3Dke;pageTitle%3D%3DEarly%252520Family%252520Math"
-    } else if (type == "EFM_not_KE"){
+  } else if (type == "EFM_not_KE"){
     segment_name <- "segment=pageTitle%3D%3DEarly%252520Family%252520Math;countryCode!%3Dke"
   } else {
     segment_name <- "segment="
   }
   
   json_file <- paste0("https://apps-server.idems.international/analytics/index.php?apiAction=getUsers&apiModule=UserId&date=", date_from, ",", date_to, "&expanded=1&filter_limit=-1&format=JSON&idSite=1&method=API.getProcessedReport&module=API&period=range&", segment_name, "&token_auth=", token)
-  
   json_data <- jsonlite::fromJSON(txt=json_file, flatten = TRUE)
   
   our_data <- json_data$reportData
