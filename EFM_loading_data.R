@@ -21,7 +21,7 @@ plhdata_org <- plhdata_org %>% filter(as.Date(createdAt) > as.Date(mydate))
 plhdata_org <- plhdata_org %>% dplyr::filter(nchar(app_user_id) == 16)
 
 # filter to individuals from Kenya
-token_matomo <- read.table("token_matomo", quote="\"", comment.char="")
+token_matomo <- read.table("token_matomo", quote="\"", comment.char="", fill = TRUE)
 efm_kenya <- calling_matomo_data(type = "EFM_KE")
 kenyan_ids <- efm_kenya$UUID
 plhdata_org <- plhdata_org %>% dplyr::filter(app_user_id %in% kenyan_ids)
@@ -64,10 +64,7 @@ plhdata_org <- plhdata_org %>%
 # Caused by error in `.data[["rp-contact-field.efm_sb_Cat_And_Dog_And_The_Ball_book_click_history"]]`:
 #   ! Column `rp-contact-field.efm_sb_Cat_And_Dog_And_The_Ball_book_click_history` not found in `.data`.
 
-# lets check if these variables exist
 
-vars_to_check <- data_l$storybooks$variable
-plhdata_org <- add_na_variable(data = plhdata_org, variable = vars_to_check)
 
 # WARNING: Please please check when you do this - this code creates the variable and fills with NAs if it
 # is not in the data set.
@@ -161,27 +158,51 @@ plhdata_org <- plhdata_org %>% mutate(current_activities_chapter = case_when(
   current_activities_chapter == "data.efm_chapt.efm_chapt_3" ~ "Chapter 3",
   current_activities_chapter == "data.efm_chapt.efm_chapt_4" ~ "Chapter 4",
   current_activities_chapter == "data.efm_chapt.efm_chapt_5" ~ "Chapter 5",
-  current_activities_chapter == NA ~ "NA"))
+  is.na(current_activities_chapter) ~ "NA"))
 
 
 # Storybooks
 plhdata_org$`current_storybook_accessed` <- plhdata_org$'rp-contact-field.current_book'
+# 
 
-geom_bar(aes(x = current_storybook_accessed)) + 
-  labs(x = "Storybook", y = "Count", title = "Current storybooks accessed") + 
-  theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1)) + 
-  theme_minimal ()
+# # Number of storybooks accessed per person
+# plhdata_org <- plhdata_org %>%
+#   rowwise() %>%
+#   mutate(number_sb_accessed = sum(!is.na(c_across(starts_with("rp-contact-field.efm_sb_") & ends_with("_click_history"))))) %>%
+#   ungroup() %>%
+#   mutate(perc_sb_accessed = round(number_sb_accessed/48 * 100, 2))
 
-library(ggplotly)
-ggplotly::plotly (geom_bar(aes(x = current_storybook_accessed)) + 
-                    labs(x = "Storybook", y = "Count", title = "Current storybooks accessed") + 
-                    theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1)) + 
-                    theme_minimal ())
-
-
-
-
-
+# # Number of times any storybook is accessed (per person)
+# plhdata_org <- plhdata_org %>%
+#   rowwise() %>%
+#   mutate(number_sb_accessed_repeats = sum(c_across(starts_with("rp-contact-field.efm_sb_") & ends_with("_count")))) %>%
+#   ungroup()
+# 
 
 
+# geom_bar(aes(x = current_storybook_accessed)) + 
+#   labs(x = "Storybook", y = "Count", title = "Current storybooks accessed") + 
+#   theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1)) + 
+#   theme_minimal ()
+
+# library(plotly)
+# plotly::ggplotly (ggplot(data = plhdata_org) + geom_bar(aes(x = current_storybook_accessed)) +
+#                     labs(x = "Storybook", y = "Count", title = "Current storybooks accessed") +
+#                     theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1)) +
+#                     theme_minimal ())
+# 
+# 
+# 
+# ggplot(data = plhdata_org) + geom_bar(aes(x = current_storybook_accessed)) +
+#   labs(x = "Storybook", y = "Count", title = "Current storybooks accessed") +
+#   theme_minimal () +
+#   theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 0.5))
+  
+# geom_bar(aes(x = current_storybook_accessed)) + labs(x = "Storybook", y = "Count", title = "Current storybooks accessed") + theme_minimal () + theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 0.5))
+
+# lets check if these variables exist
+
+
+vars_to_check <- data_l$storybooks$variable
+plhdata_org <- add_na_variable(data = plhdata_org, variable = vars_to_check)
 
